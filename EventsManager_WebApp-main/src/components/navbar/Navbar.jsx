@@ -30,7 +30,7 @@ function Navbar ()  {
         <div className="font-bold text-2xl "><Link to="/home">Events<span className="text-green">.</span></Link></div>
         <ul className="flex items-center gap-6 ">
             <li className="link-nav cursor-pointer"><Link to="/">Acceuil</Link></li>
-            <li className="link-nav cursor-pointer">Evènement</li>
+            <li className="link-nav cursor-pointer">Evènemen</li>
             <li className="link-nav cursor-pointer">A propos</li>
             <li className="link-nav cursor-pointer">Contact</li>
         </ul>
