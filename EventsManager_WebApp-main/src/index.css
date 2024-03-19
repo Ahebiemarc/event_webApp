@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+
+  /*NAVBAR STYLE */
+
+  .btn-nav{
+    @apply bg-blue text-white py-[3px] px-[24px] rounded-3xl text-center;
+  }
+  
+  .link-nav{
+    @apply  inline-block text-center tracking-[1px] font-regular relative overflow-hidden z-[1];
+  }
+  .link-nav::before{
+     @apply content-[''] absolute w-[100%] h-[0%] bg-green bottom-0 left-0 z-[-1] transition-all duration-[0.4s];
+  }
+  .link-nav:hover::before{
+    @apply h-[40%];  
+  }
+
+  /*BANNER HERO STYLE */
+
+  .btn-hero{
+    @apply  bg-green aspect-[1] w-[8rem] text-[1.6rem] shrink-0 text-center relative z-[-2] overflow-hidden
+  }
+  .btn-hero::before{
+    @apply content-[''] absolute w-[100%] h-[0%] bg-orange bottom-0 left-0 z-[-1] transition-all duration-[0.4s];
+  }
+  .btn-hero:hover::before{
+    @apply h-[100%];  
+  }
+  .img-hero{
+    @apply h-[550px] relative bg-center-top rounded-[.8rem] grow w-[33%] transition-width duration-[500ms] ease-in-out cursor-pointer;
+  }
+
+  .img-hero:hover{
+    @apply w-[60%];
+  }
+
+  .img-hero2{
+    @apply w-[60%]
+  }
+
+  .contain-img:hover .img-hero2{
+    @apply w-[33%]
+  }
+
+  .img-hero:first-child:hover{
+    @apply w-[60%]
+  }
+
+
+  .vert{
+    @apply absolute bottom-[5rem] left-[-2.5rem] text-white -rotate-90 text-[2rem] transition-opacity duration-[200ms] ease-in-out;
+  }
+
+  .img-hero:hover .vert{
+    @apply opacity-0;
+  }
+
+  .contain-img:hover .horiz2{
+    @apply opacity-0;
+  }
+
+
+  .horiz{
+    @apply flex items-center justify-between text-[1.4rem] py-0 px-[2rem] absolute bottom-[2rem] text-white w-[100%] opacity-0 transition-opacity duration-[500ms] ease-in-out cursor-pointer;
+  }
+  .horiz2{
+    @apply opacity-[1]
+  }
+  .topics{
+    @apply flex flex-col justify-center items-center
+  }
+
+  .strong{
+    @apply text-[2.5rem] font-medium leading-[1]
+  }
+
+  .span{
+    @apply text-[1rem] font-medium
+  }
+
+  .img-hero:hover .horiz{
+    @apply opacity-[1]
+  }
+
+  .name{
+    @apply text-[2rem]
+  }
+
+  .h1-text > span{
+    @apply overflow-hidden block
+  }
+  /*.h1-text > span{
+    @apply block animate-wiggle translate-y-[100%]
+  }
+
+  .h1-text > span:nth-child(2){
+    @apply block animate-wiggle2 translate-y-[100%]
+  }
+  .h1-text > span:nth-child(2){
+    @apply block animate-wiggle3 translate-y-[100%]
+  }*/
+  .blinking-cursor::after{
+    @apply content-['|'] animate-blink1 
+  }
+
+
+  /*TITLE CONTAINER*/
+
+  .title-nav-container{
+    @apply text-[#222] cursor-pointer text-[1.1rem] text-center
+  }
+  
+}
+
+body{
+  background-color: #fdfdfe;
+}
+
+/*body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}*/
