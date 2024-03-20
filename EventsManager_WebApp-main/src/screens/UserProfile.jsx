@@ -5,7 +5,7 @@ import UserProfileC from '../components/userProfile/UserProfile';
 function UserProfile(){
   return (
     <div>
-      <UserProfileC />
+      pppp
     </div>
   )
 }

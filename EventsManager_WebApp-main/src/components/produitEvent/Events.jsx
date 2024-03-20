@@ -8,6 +8,7 @@ import {
 
 import EventProducts from '../../data'
 import Event from './Event'
+import { Link } from 'react-router-dom';
 
 function Events(){
 
@@ -17,11 +18,13 @@ function Events(){
     <main  className="my-[2.5rem] font-police">
         <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
             {EventProducts.map((EventProduct) => (
-                <Event key={EventProduct.id} EventProduct={EventProduct}/>
+                <Link to={`/event/${EventProduct.id}`}>
+                 <Event key={EventProduct.id} EventProduct={EventProduct}/>
+                </Link>
             ))}
  
         </div>
-        <div className="bg-red-300 my-[2.5rem]">
+        <div className="bg-red-300 my-[4.5rem]">
         <Button variant="text" className="flex items-center gap-2 w-[200px] float-right mr-[80px] hover:bg-[#e8f8ff]">
           Encore Plus <ArrowLongRightIcon strokeWidth={2} className="h-5 w-5" />
         </Button>

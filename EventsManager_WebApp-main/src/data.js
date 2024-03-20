@@ -148,4 +148,4 @@ const EventProducts = [
 
 
 
-export default EventProducts
+export default EventProducts;

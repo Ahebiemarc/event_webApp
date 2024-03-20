@@ -53,7 +53,7 @@ function Hero () {
           </h1>
           <div className="flex h-[7rem] mb-[2rem] z-[100] overflow-visible whitespace-nowrap absolute shadow-sm bottom-[3rem] w-[100%] right-[-80px] ">
             <input className="grow px-[2.5rem] bg-white font-light focus:outline-none" type="email" placeholder='entrer votre mail' />
-            <button className="btn-hero">Recevoir</button>
+            <button className="btn-hero text-white">Recevoir</button>
           </div>
         </div>
         <div className="col-[5/13] flex gap-[2rem] contain-img">

@@ -9,10 +9,12 @@ module.exports = withMT( {
       colors:{
         blue: '#1e1e2f',
         green: '#97c680',
-        orange: "#f38359"
+        orange: "#f38359",
+        paleOrange: "hsl(25, 100%, 94%)",
       },
       fontFamily:{
-        police: ['Poppins', 'sans-serif']
+        police: ['Poppins', 'sans-serif'],
+        sans: ["Roboto", "sans-serif"],
       },
       fontWeight: {
         thin: '100',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaBell } from "react-icons/fa";
-import { Avatar } from "@material-tailwind/react";
+import { Avatar, Badge } from "@material-tailwind/react";
 import avatar from '../../assets/profile.jpg';
 import {
   Button,
@@ -30,7 +30,7 @@ function Navbar ()  {
         <div className="font-bold text-2xl "><Link to="/home">Events<span className="text-green">.</span></Link></div>
         <ul className="flex items-center gap-6 ">
             <li className="link-nav cursor-pointer"><Link to="/">Acceuil</Link></li>
-            <li className="link-nav cursor-pointer">Evèneme</li>
+            <li className="link-nav cursor-pointer">Evènement</li>
             <li className="link-nav cursor-pointer">A propos</li>
             <li className="link-nav cursor-pointer">Contact</li>
         </ul>
@@ -42,7 +42,7 @@ function Navbar ()  {
             <span onClick={handleOpen} className="ml-5 text-[24px] cursor-pointer"><Avatar src={`${avatar}`} alt="avatar" variant="circular" /></span>
             <UserProfileC open={open} handleOpen={handleOpen} />
 
-            <span className="text-[24px] cursor-pointer ml-2"><FaBell /></span>
+            <Badge content="10"><span className="text-[24px] cursor-pointer ml-2"><FaBell /></span></Badge>
         </div>
       </div>
     </nav>

@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<Navigate replace to="/home" />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/event" element={<SingleEvent />} />
+        <Route path="/event/:id" element={<SingleEvent />} />
         <Route path="/post-event" element={<PostEvents />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Page404 />}/>

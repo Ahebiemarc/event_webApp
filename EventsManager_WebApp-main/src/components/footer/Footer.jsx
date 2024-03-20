@@ -22,7 +22,7 @@ function Footer () {
                 </div>
                 <div className="mt-[1.5rem] shadow-sm overflow-hidden">
                     <input type="email" placeholder='Entrer votre mail' className="grow px-[2rem] py-[0.5rem] font-light focus:outline-none"/>
-                    <button className="h-[2.6rem] w-[7.6rem] overflow-hidden btn-hero right-[0.5px] h">Recevoir</button>
+                    <button className="h-[2.6rem] w-[7.6rem] btn-hero z-[100] text-white text-[16px] ">Recevoir</button>
                 </div>
             </div>
         </div>
