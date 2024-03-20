@@ -6,6 +6,8 @@ import Events from "./screens/Events";
 import Signup from "./screens/Signup";
 import PostEvents from "./screens/PostEvents";
 import Page404 from "./screens/Page404";
+import About from './screens/About';
+import Contact from "./screens/Contact";
 
 function App() {
   return (
@@ -18,7 +20,10 @@ function App() {
         <Route path="/event/:id" element={<SingleEvent />} />
         <Route path="/post-event" element={<PostEvents />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact-us" element={<Contact />} />
         <Route path="*" element={<Page404 />}/>
+
         
       </Routes>
 

@@ -9,11 +9,11 @@ function Footer () {
             <div >
                 <div className="px-[4rem]">
                     <Link className="inline-block mr-[6rem] mb-[2rem]">A propos de nous</Link>
-                    <Link>Contact</Link>
+                    <Link to="/contact-us">Contact</Link>
                 </div>
                 <div className="px-[4rem]">
-                    <Link className="inline-block mr-[6rem] mb-[2rem]">Evènements</Link>
-                    <Link className="ml-[2.5rem]">A propos</Link>
+                    <Link to="/events" className="inline-block mr-[6rem] mb-[2rem]">Evènements</Link>
+                    <Link to="/about" className="ml-[2.5rem]">A propos</Link>
                 </div>
             </div>
             <div>
