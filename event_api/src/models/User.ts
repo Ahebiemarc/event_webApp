@@ -9,6 +9,8 @@ interface UserDocument extends Document {
     salt?: string;
     sessionToken?: string;
   };
+  profilePhoto?: string
+  is_admin?: boolean;
 }
 
 type userDataProps = {
@@ -19,6 +21,9 @@ type userDataProps = {
     password: string;
     salt: string;
   };
+  profilePhoto?: string;
+  is_admin?: boolean;
+
 }
 
 interface UserModel extends Model<UserDocument> {
@@ -36,10 +41,16 @@ const UserSchema = new mongoose.Schema<UserDocument, UserModel>({
     salt: { type: String, select: false },
     sessionToken: { type: String, select: false },
   },
+  profilePhoto: { type: String, required: false},
+  is_admin: { type: Boolean, required: true, default: false},
 });
 
 UserSchema.statics.getUserByUsername = function (username: string) {
-  return this.findOne({ username });
+  return this.findOne({ username })
+  // Sélectionnez les champs d'authentification, y compris le sel et le mot de passe
+  .select('+authentication.salt +authentication.password')
+  // Exécutez la requête et retournez la promesse résultante
+  .exec();
 };
 
 UserSchema.statics.getUserByEmail = function (email: string) {

@@ -25,6 +25,10 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+// Servez les fichiers statiques du dossier './uploads/images'
+app.use('/uploads', express.static('uploads'));
+
+
 
 const server = http.createServer(app);
 
@@ -44,7 +48,7 @@ mongoose.connect(DB_URL)
 
 mongoose.connection.once('error', (error : Error) => console.log(error.message));
 
-app.use('/', router());
+app.use('/api/', router());
 
 
 
