@@ -30,6 +30,9 @@ interface UserModel extends Model<UserDocument> {
   getUserByUsername(username: string): Promise<UserDocument | null>;
   getUserByEmail(email: string): Promise<UserDocument | null>;
   createUser(userData: userDataProps): Promise<UserDocument>;
+  deleteUserById(userId: string): Promise<UserDocument>;
+  getUserById(userId: string): Promise<UserDocument | null>
+  
 }
 
 const UserSchema = new mongoose.Schema<UserDocument, UserModel>({
@@ -53,12 +56,25 @@ UserSchema.statics.getUserByUsername = function (username: string) {
   .exec();
 };
 
+
+UserSchema.statics.getUserById = function (userId: string) {
+  return this.findOne({ _id: userId})
+  // Sélectionnez les champs d'authentification, y compris le sel et le mot de passe
+  .select('+authentication.salt +authentication.sessionToken')
+  // Exécutez la requête et retournez la promesse résultante
+  .exec();
+};
+
 UserSchema.statics.getUserByEmail = function (email: string) {
   return this.findOne({ email });
 };
 
 UserSchema.statics.createUser = function (userData: userDataProps) {
   return this.create(userData);
+};
+
+UserSchema.statics.deleteUserById = function (userId: string) {
+  return this.findByIdAndDelete(userId).exec();
 };
 
 export const UserModel = mongoose.model<UserDocument, UserModel>('User', UserSchema);

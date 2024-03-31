@@ -1,9 +1,44 @@
 import express from 'express';
 import  path from 'path';
-import { hashedPwd, random } from '../helpers/utils';
+import { hashedPwd, random, generateToken, getUserIdFromToken } from '../helpers/utils';
 import { UserModel } from '../models/User';
+import fs from 'fs';
+import { promisify } from 'util';
+
+// Convertir la fonction fs.unlink en une version asynchrone pour pouvoir l'utiliser avec await
+const unlinkAsync = promisify(fs.unlink);
 
 
+export const deleteUserController = async (req: express.Request, res: express.Response)=>{
+    try {
+        const userId = req.params.userId;
+
+
+        //const user = await UserModel.findById(userId);
+        /*if(!user){
+            return res.status(400).json({ message: "Utilisateur non trouvé." });
+        }*/
+
+        if(userId !== req.userId){
+            return res.status(400).json({ message: "Action non authorisé" });
+        }
+
+
+        // Supprimer l'utilisateur de la base de données
+        const deletedUser = await UserModel.deleteUserById(userId);
+
+        // Supprimer l'image de profil associée à l'utilisateur
+        if (deletedUser.profilePhoto) {
+            await unlinkAsync(deletedUser.profilePhoto); // Supprime le fichier d'image du système de fichiers
+        }
+        
+        res.clearCookie('MARKUS-AUTH')
+
+        res.status(200).json({ message: 'Compte utilisateur supprimé avec succès.' });
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la suppression du compte utilisateur.", error: error.message })
+    }
+}
 
 export const registerUserController = async (req: express.Request, res: express.Response) => {
     try {
@@ -21,9 +56,9 @@ export const registerUserController = async (req: express.Request, res: express.
 
         const hashedPassword = hashedPwd(salt, password);
 
-        console.log(email, username, number, password);
+        //console.log(email, username, number, password);
         //console.log(salt);
-        console.log(hashedPassword);
+        //console.log(hashedPassword);
         
         
         
@@ -86,12 +121,21 @@ export const loginUserController = async (req: express.Request, res: express.Res
             return res.status(403).json({ message: "Mot de passe invalide" });
         }
 
-        const salt = random();
-        user.authentication.sessionToken = hashedPwd(salt, user._id.toString());
+        const sessionToken = generateToken(user._id.toString());
+
+        ///console.log('sessionToken : ', sessionToken);
+        
+
+        user.authentication.sessionToken = sessionToken
 
         await user.save();
 
-        res.cookie('MARKUS-AUTH', user.authentication.sessionToken);
+        // Définissez la durée d'expiration du cookie en millisecondes (ici 1 heure)
+        const maxAge = 3600000; // 1 heure en millisecondes
+
+        res.cookie('MARKUS-AUTH', user.authentication.sessionToken, {maxAge, httpOnly:true});
+
+        // Envoyez le cookie avec le token JWT et spécifiez la durée d'expiration
         res.status(201).json({ message: 'Utilisateur connecté avec succès', user }).end();
         
     } catch (error) {

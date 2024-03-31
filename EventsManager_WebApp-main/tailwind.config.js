@@ -28,6 +28,7 @@ module.exports = withMT( {
       gridTemplateColumns: {
         // Simple 12 column grid
         '2': 'repeat(12, 1fr)',
+        'profile': "40% 60%"
       },
       boxShadow: {
         'sm': '3px 6px 6px 2px rgb(0 0 0 / 20%)',

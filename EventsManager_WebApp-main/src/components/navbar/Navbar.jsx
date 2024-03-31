@@ -39,8 +39,7 @@ function Navbar ()  {
             <LoginUser open={openP} handleOpen={handleOpenP} />
             <Link to="/signup"><Button  className="btn-nav cursor-pointer">S'Inscrire</Button></Link>
 
-            <span onClick={handleOpen} className="ml-5 text-[24px] cursor-pointer"><Avatar src={`${avatar}`} alt="avatar" variant="circular" /></span>
-            <UserProfileC open={open} handleOpen={handleOpen} />
+            <Link to="/profile" className="ml-5 text-[24px] cursor-pointer"><Avatar src={`${avatar}`} alt="avatar" variant="circular" /></Link>
 
             <Badge content="10"><span className="text-[24px] cursor-pointer ml-2"><FaBell /></span></Badge>
         </div>
