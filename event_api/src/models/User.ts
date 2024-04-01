@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from 'mongoose';
 
-interface UserDocument extends Document {
+interface IUserDocument extends Document {
   email: string;
   username: string;
   number: number;
@@ -13,7 +13,7 @@ interface UserDocument extends Document {
   is_admin?: boolean;
 }
 
-type userDataProps = {
+type UserDataProps = {
     email: string;
     username: string;
     number: number;
@@ -26,16 +26,16 @@ type userDataProps = {
 
 }
 
-interface UserModel extends Model<UserDocument> {
-  getUserByUsername(username: string): Promise<UserDocument | null>;
-  getUserByEmail(email: string): Promise<UserDocument | null>;
-  createUser(userData: userDataProps): Promise<UserDocument>;
-  deleteUserById(userId: string): Promise<UserDocument>;
-  getUserById(userId: string): Promise<UserDocument | null>
+interface IUserModel extends Model<IUserDocument> {
+  getUserByUsername(username: string): Promise<IUserDocument | null>;
+  getUserByEmail(email: string): Promise<IUserDocument | null>;
+  createUser(userData: UserDataProps): Promise<IUserDocument>;
+  deleteUserById(userId: string): Promise<IUserDocument>;
+  getUserById(userId: string): Promise<IUserDocument | null>
   
 }
 
-const UserSchema = new mongoose.Schema<UserDocument, UserModel>({
+const UserSchema = new mongoose.Schema<IUserDocument, IUserModel>({
   email: { type: String, required: true, unique: true},
   username: { type: String, required: true, unique: true},
   number: { type: Number, required: true },
@@ -69,7 +69,7 @@ UserSchema.statics.getUserByEmail = function (email: string) {
   return this.findOne({ email });
 };
 
-UserSchema.statics.createUser = function (userData: userDataProps) {
+UserSchema.statics.createUser = function (userData: UserDataProps) {
   return this.create(userData);
 };
 
@@ -77,4 +77,4 @@ UserSchema.statics.deleteUserById = function (userId: string) {
   return this.findByIdAndDelete(userId).exec();
 };
 
-export const UserModel = mongoose.model<UserDocument, UserModel>('User', UserSchema);
+export const UserModel = mongoose.model<IUserDocument, IUserModel>('User', UserSchema);
