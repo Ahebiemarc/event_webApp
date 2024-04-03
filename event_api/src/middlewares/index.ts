@@ -1,11 +1,13 @@
 import {Request, Response, NextFunction} from 'express'
 import { getUserIdFromToken } from '../helpers/utils';
+import { UserModel } from '../models/User';
 
 // Déclaration de la nouvelle interface pour étendre Request
 declare global {
     namespace Express{
         interface Request{
             userId?: string;
+            isAdminId?: string;
         }
     }
 }
@@ -24,5 +26,21 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction 
 
     req.userId = userId;
 
+    return next();
+}
+
+export const isAdmin = async (req: Request, res: Response, next: NextFunction)=>{
+
+    const userId = req.userId;
+
+    const user =  await UserModel.getUserById(userId);
+
+
+    if(user.is_admin !== true){
+        return res.status(401).json({ message: "Non autorisé." });
+    }
+
+    req.isAdminId = userId;
+    
     return next();
 }

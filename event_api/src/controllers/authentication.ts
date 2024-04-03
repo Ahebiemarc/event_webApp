@@ -2,43 +2,10 @@ import express from 'express';
 import  path from 'path';
 import { hashedPwd, random, generateToken, getUserIdFromToken } from '../helpers/utils';
 import { UserModel } from '../models/User';
-import fs from 'fs';
-import { promisify } from 'util';
-
-// Convertir la fonction fs.unlink en une version asynchrone pour pouvoir l'utiliser avec await
-const unlinkAsync = promisify(fs.unlink);
 
 
-export const deleteUserController = async (req: express.Request, res: express.Response)=>{
-    try {
-        const userId = req.params.userId;
 
 
-        //const user = await UserModel.findById(userId);
-        /*if(!user){
-            return res.status(400).json({ message: "Utilisateur non trouvé." });
-        }*/
-
-        if(userId !== req.userId){
-            return res.status(400).json({ message: "Action non authorisé" });
-        }
-
-
-        // Supprimer l'utilisateur de la base de données
-        const deletedUser = await UserModel.deleteUserById(userId);
-
-        // Supprimer l'image de profil associée à l'utilisateur
-        if (deletedUser.profilePhoto) {
-            await unlinkAsync(deletedUser.profilePhoto); // Supprime le fichier d'image du système de fichiers
-        }
-        
-        res.clearCookie('MARKUS-AUTH')
-
-        res.status(200).json({ message: 'Compte utilisateur supprimé avec succès.' });
-    } catch (error) {
-        res.status(500).json({ message: "Erreur lors de la suppression du compte utilisateur.", error: error.message })
-    }
-}
 
 export const registerUserController = async (req: express.Request, res: express.Response) => {
     try {
@@ -50,8 +17,6 @@ export const registerUserController = async (req: express.Request, res: express.
             correctPhotoPath = profilePhotoPath.split(path.sep).join("/")
         }
 
-        const numberConvert = Number(number);
-
         const salt = random();
 
         const hashedPassword = hashedPwd(salt, password);
@@ -59,16 +24,10 @@ export const registerUserController = async (req: express.Request, res: express.
         //console.log(email, username, number, password);
         //console.log(salt);
         //console.log(hashedPassword);
-        
-        
-        
-
-        if (typeof email !== 'string' || typeof username !== 'string' || typeof numberConvert !== 'number' || typeof password !== 'string') {
+        if (typeof email !== 'string' || typeof username !== 'string'  || typeof password !== 'string') {
             return res.status(400).json({ message: "Les données reçues sont invalides." });
         };
-
-
-
+        
         // Vérifier si l'email est déjà utilisé
         const existingEmailUser = await UserModel.getUserByEmail(email);
         if (existingEmailUser) {
@@ -85,7 +44,7 @@ export const registerUserController = async (req: express.Request, res: express.
         const newUser = await UserModel.createUser({
             email,
             username,
-            number: numberConvert,
+            number,
             authentication:{
                 password: hashedPassword,
                 salt,
