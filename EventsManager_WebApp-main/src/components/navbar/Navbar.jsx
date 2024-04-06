@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { FaBell } from "react-icons/fa";
 import { Avatar, Badge } from "@material-tailwind/react";
 import avatar from '../../assets/profile.jpg';
+
 import {
   Button,
 } from "@material-tailwind/react";
 import LoginUser from '../form/LoginUser';
-import UserProfileC from '../userProfile/UserProfile';
 
 
 function Navbar ()  {
@@ -15,19 +15,15 @@ function Navbar ()  {
   // Dialog Component Connexion
   const [open, setOpen] = useState(false);
 
-  // Dialog Component Profile user
-  const [openP, setOpenP] = useState(false);
-
 
   const handleOpen = () => setOpen((cur) => !cur);
 
-  const handleOpenP = ()  => setOpenP(!openP);
   
 
   return (
     <nav>
       <div className="flex items-center justify-between bg-[#fdfdfe] font-police mt-[34px] mb-[40px] pl-24 pr-20 m-auto max-w-7xl">
-        <div className="font-bold text-2xl "><Link to="/home">Events<span className="text-green">.</span></Link></div>
+        <div className="font-bold text-2xl "><Link to="/">Events<span className="text-green">.</span></Link></div>
         <ul className="flex items-center gap-6 ">
             <li className="link-nav cursor-pointer"><Link to="/">Acceuil</Link></li>
             <li className="link-nav cursor-pointer"><Link to="/events">Evènement</Link></li>
@@ -35,8 +31,8 @@ function Navbar ()  {
             <li className="link-nav cursor-pointer"><Link to="/contact-us">Contact</Link></li>
         </ul>
         <div className="flex items-center gap-3">
-            <Button onClick={handleOpenP} className="btn-nav ml-20 cursor-pointer ">CONNEXION</Button>
-            <LoginUser open={openP} handleOpen={handleOpenP} />
+            <Button onClick={handleOpen} className="btn-nav ml-20 cursor-pointer ">CONNEXION</Button>
+            <LoginUser open={open} handleOpen={handleOpen} />
             <Link to="/signup"><Button  className="btn-nav cursor-pointer">S'Inscrire</Button></Link>
 
             <Link to="/profile" className="ml-5 text-[24px] cursor-pointer"><Avatar src={`${avatar}`} alt="avatar" variant="circular" /></Link>

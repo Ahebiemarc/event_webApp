@@ -65,7 +65,7 @@ export default function ({EventProduct}) {
              }}
             >
                 <Card 
-                className="hover:scale-105 duration-500 col-span-1 mx-5 h-[300px]">
+                className="hover:scale-105 duration-500 col-span-1 mx-5 h-full">
                     <motion.div
                         variants={imageAnimate}
                     >
@@ -81,7 +81,8 @@ export default function ({EventProduct}) {
                     <Typography variant="h5" className="mb-2 text-[.9rem]">
                         {EventProduct.title}
                     </Typography>
-                    <Typography /*className="text-[.65rem]"*/>
+
+                    <Typography /*className="text-[.65rem]"*/ className='flex items-center'>
                         <div className="flex items-center -space-x-4">
                             <Avatar 
                                 variant="circular"
@@ -114,18 +115,20 @@ export default function ({EventProduct}) {
                                 src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1760&q=80"
                             />
                         </div>
+                        <div className='ml-10'><p className='text-xs font-police'>23/08/2024</p></div>
                     </Typography>
-                    </CardBody>
                     <CardFooter divider className="flex items-center justify-between py-3">
-                    <Typography variant="small" className="flex items-center gap-1.5 font-normal">
-                    <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700 " />
-                        {EventProduct.review}
-                    </Typography>
-                    <Typography variant="small" color="gray" className="flex gap-1">
-                        <FaPeriscope className="mt-[3px]" />
-                        Monastir, Tunisie
-                    </Typography>
+                        <Typography variant="small" className="flex items-center gap-1.5 font-normal">
+                        <StarIcon className="-mt-0.5 h-5 w-5 text-yellow-700 " />
+                            {EventProduct.review}
+                        </Typography>
+                        <Typography variant="small" color="gray" className="flex gap-1">
+                            <FaPeriscope className="mt-[3px]" />
+                            Monastir, Tunisie
+                        </Typography>
                     </CardFooter>
+                    </CardBody>
+                    
                 </Card>
                 </motion.div>
         </motion.div>

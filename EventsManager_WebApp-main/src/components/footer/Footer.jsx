@@ -8,7 +8,7 @@ function Footer () {
             <div className="font-bold text-2xl "><Link to="/home">Events<span className="text-green">.</span></Link></div>
             <div >
                 <div className="px-[4rem]">
-                    <Link className="inline-block mr-[6rem] mb-[2rem]">A propos de nous</Link>
+                    <Link to='/about' className="inline-block mr-[6rem] mb-[2rem]">A propos de nous</Link>
                     <Link to="/contact-us">Contact</Link>
                 </div>
                 <div className="px-[4rem]">
