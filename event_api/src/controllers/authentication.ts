@@ -4,7 +4,15 @@ import { hashedPwd, random, generateToken, getUserIdFromToken } from '../helpers
 import { UserModel } from '../models/User';
 
 
+export const logoutController = (req: express.Request, res:express.Response) => {
+    try {
+        res.clearCookie('MARKUS-AUTH')
+        res.status(200).json({message: 'Déconnexion avec succès'})
 
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la Déconnexion de l'utilisateur.", error: error.message })
+    }
+};
 
 
 export const registerUserController = async (req: express.Request, res: express.Response) => {

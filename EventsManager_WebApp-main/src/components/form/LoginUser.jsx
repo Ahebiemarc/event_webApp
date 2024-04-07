@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
     Button,
@@ -11,9 +11,11 @@ import {
     Input,
   } from "@material-tailwind/react";
 
-import Chekbox from './Chekbox'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { loginUser } from '../../api/auth';
+import { toast } from 'react-toastify';
+import { photoBaseURL } from '../../screens/UserProfile';
 
 const LoginUser = ({open, handleOpen}) => {
 
@@ -21,17 +23,26 @@ const LoginUser = ({open, handleOpen}) => {
 
     const navigate =  useNavigate();
     const location = useLocation();
+    const [errorAPI, setErrorAPI] = useState(null);
+
 
     //const [username, setUsername] = useState("")
 
-    const onSubmit = (data) => {
-
-      // essayer de faire un try catch pour envoyer les données (mieux sécuriser)
-
-      //setUsername(() => data.firstName)
-    
-      console.log(data);
-      reset();
+    const onSubmit = async (data) => {
+      
+      try {
+        const response = await loginUser(data);
+        const {user} = response
+        localStorage.setItem('user', user._id);
+        localStorage.setItem('profilePhoto', user.profilePhoto);
+        //console.log(response);
+        reset();
+        redirectHome();
+      } catch (error) {
+        setErrorAPI(error.response.data.message);
+        //console.error('Erreur lors de l\'inscription :', error.response.data.message);
+      }
+      
         
   
     }
@@ -70,24 +81,19 @@ const LoginUser = ({open, handleOpen}) => {
             <Typography variant="h3" color="white">
               Se Connecter
             </Typography>
+            <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errorAPI}</span>
           </CardHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
           <CardBody className="flex flex-col gap-4">
             <div>
-              <Input label="Email" size="lg" {...register("email", {
+              <Input label="Nom" size="lg" {...register("username", {
                 required:{
                   value: true,
-                  message: 'Email est obligatoire !!!',
+                  message: 'Votre Nom est obligatoire !!!',
                 },
-                pattern: {
-                  value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                  
-                  message: 'Email fourni invalide !!!',
-                }
               })} />
 
-              {errors.email?.type === 'required' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.email.message}</span>}
-              {errors.email?.type === 'pattern' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.email.message}</span>}
+              {errors.username?.type === 'required' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.email?.message}</span>}
 
             </div>
             <div>
@@ -96,42 +102,22 @@ const LoginUser = ({open, handleOpen}) => {
                   value: true,
                   message: 'Mot de passe est obligatoire !!!',
                 },
-                pattern: {
+                /*pattern: {
                   value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/,
                   message: 'Le mot de passe doit contenir au moins une lettre majuscule, minuscule lettre, chiffre et symbole spécial !!!',
-                }
+                }*/
               })}/>
 
-              {errors.password?.type === 'required' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>}
-              {errors.password?.type === 'pattern' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>}
+              {errors.password?.type === 'required' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password?.message}</span>}
+              {/*errors.password?.type === 'pattern' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>*/}
 
-            </div>
-            <div className="-ml-2.5">
-            <Controller
-            control={control}
-            defaultValue={false}
-            name="remenberMe"
-            render={({
-              field: { onChange, onBlur, value, name, ref },
-              /*fieldState: { invalid, isTouched, isDirty, error },
-              formState,*/
-            }) => (
-              <Chekbox
-              title={"Se souvenir de moi"}
-                onBlur={onBlur} // notify when input is touched
-                onChange={onChange} // send value to hook form
-                checked={value}
-                inputRef={ref}
-              />
-            )}
-          />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button 
             variant="gradient" 
             type="submit" fullWidth className="bg-blue"
-            disabled={isSubmitting || errors.email ||errors.password} >
+            disabled={isSubmitting} >
               connexion
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">

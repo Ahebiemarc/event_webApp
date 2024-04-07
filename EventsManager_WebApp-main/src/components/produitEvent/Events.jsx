@@ -18,8 +18,8 @@ function Events(){
     <main  className="my-[2.5rem] font-police">
         <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
             {EventProducts.map((EventProduct) => (
-                <Link to={`/event/${EventProduct.id}`}>
-                 <Event key={EventProduct.id} EventProduct={EventProduct}/>
+                <Link key={EventProduct.id} to={`/event/${EventProduct.id}`}>
+                 <Event  EventProduct={EventProduct}/>
                 </Link>
             ))}
  

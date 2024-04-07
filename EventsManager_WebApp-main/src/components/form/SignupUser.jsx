@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Navbar from '../navbar/Navbar'
 import Footer from '../footer/Footer'
@@ -7,26 +7,40 @@ import { Button, Card, Input, Typography } from '@material-tailwind/react'
 import { Controller, useForm } from 'react-hook-form'
 import ToastSuccess from '../toast/ToastSuccess'
 import { toast } from 'react-toastify'
+import { registerUser } from '../../api/auth'
+import { useNavigate } from 'react-router-dom'
 
 const SignupUser = () => {
 
   const {register, handleSubmit, reset, control, formState:{errors, isSubmitSuccessful, isSubmitting}} = useForm({ mode:"onTouched" });
   
   // pour afficher l'utilisateur qui vient de s'enregistrer
-  const [username, setUsername] = useState("")
+  const [errorAPI, setErrorAPI] = useState(null);
 
 
 
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('username', data.username);
+    formData.append('number', data.number);
+    formData.append('password', data.password);
+    if (data.photo) {
+      formData.append('profilePhoto', data.photo[0]);
+    }
+    try {
 
-    // essayer de faire un try catch pour envoyer les données (mieux sécuriser)
-    
-    setUsername(() => data.firstName)
-    toast.success(`Utilisateur "${data.firstName}" est enregistré avec succès, Veuillez vous connecter !!!`);
+      const response = await registerUser(formData);
+      
+      toast.success(`Utilisateur enregistré avec succès, Veuillez vous connecter !!!`);
   
-    console.log(data);
-    reset();
+      reset();
+    } catch (error) {
+      //console.error('Erreur lors de l\'inscription :', error);
+      setErrorAPI(error.response.data.message);
+      toast.error(`Erreur: ${errorAPI}`);
+    }
   }
 
   
@@ -60,7 +74,7 @@ const SignupUser = () => {
             </div>
 
             <div>
-              <Input type="number" size="lg" label="Numéro" name="number" {...register("number", {
+              <Input type="text" size="lg" label="Numéro" name="number" {...register("number", {
                 required:{
                   value: true,
                   message: 'Votre Numéro est obligatoire !!!',
@@ -94,14 +108,14 @@ const SignupUser = () => {
                   value: true,
                   message: 'Mot de passe est obligatoire !!!',
                 },
-                pattern: {
+                /*pattern: {
                   value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/,
                   message: 'Le mot de passe doit contenir au moins une lettre majuscule, minuscule lettre, chiffre et symbole spécial !!!',
-                }
+                }*/
               })}/>
 
               {errors.password?.type === 'required' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>}
-              {errors.password?.type === 'pattern' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>}
+              {/*errors.password?.type === 'pattern' && <span className="text-red-500 text-[0.8rem] mb[2rem] inline-block">{errors.password.message}</span>*/}
 
             </div>
 
@@ -127,7 +141,7 @@ const SignupUser = () => {
             {/*<Chekbox title={"je suis membre d'un club ou association"} name="joinClub" {...register("joinClub", { joinClub: false })}/>*/}
             
           </div>
-          <Button className="mt-6 bg-blue" fullWidth type="submit" disabled={isSubmitting || errors.firstName || errors.lastName || errors.password || errors.email} >
+          <Button className="mt-6 bg-blue" fullWidth type="submit" disabled={isSubmitting} >
             S'inscrire
           </Button>
           

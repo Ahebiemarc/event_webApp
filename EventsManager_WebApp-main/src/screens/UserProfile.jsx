@@ -2,29 +2,86 @@ import React, { useEffect, useState } from 'react';
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../layout/DefaultLayout';
 import CoverOne from '../images/cover/cover-01.png';
+import profileNone from '../images/user/profileNone.png'
 import userSix from '../images/user/user-06.png'
 import { Link } from 'react-router-dom';
 import CreateEvent from '../components/produitEvent/CreateEvent';
 import EventProducts from '../data';
 import Event from '../components/produitEvent/Event';
+import { getUser } from '../api/user';
+import { Skeleton } from '@mui/material';
 
+export const photoBaseURL = "http://localhost:8000/";
 
 function UserProfile(){
 
    // Dialog Component Create Event
    const [open, setOpen] = useState(false);
 
-   const Myevent = EventProducts.slice(0, 4)
+   const Myevent = EventProducts.slice(0, 4);
+
+   const [user, setUser] = useState(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
+
+
+   const userId = localStorage.getItem('user');
+   const userIdString = userId ? String(userId) : ''
+
+
 
 
    useEffect(() => {
-    window.scrollTo(0, 0); // Faire défiler vers le haut de la page
-  }, []);
+    // Faire défiler vers le haut de la page
+    window.scrollTo(0, 0);
+
+    const fetchData = async () => {
+      try {
+        const userData = await getUser(userIdString);
+        setUser(userData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données de l'utilisateur");
+        // Gérer l'erreur, par exemple en définissant un état d'erreur
+        setError(error.reponse.data.message);
+      }
+    }
+
+    fetchData();
+  }, [user, userIdString]);
 
 
    const handleOpen = (e) => {
     setOpen((cur) => !cur)
    };
+
+
+   if (loading) {
+    return (
+      <DefaultLayout>
+        <Breadcrumb pageName="Profile" />
+        <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          <Skeleton variant="rectangular" height={200} className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center" />
+          <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
+            <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
+              <div className="relative drop-shadow-2">
+                <Skeleton variant="circular" width={150} height={150} className="absolute  h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center" />
+              </div>
+            </div>
+            <div className="mt-4 relative">
+              <Skeleton variant="text" width={200} className="absolute left-[42%] bottom-13 my-20" />
+              <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-1 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
+                <div className="mx-auto flex flex-col items-center justify-center  border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
+                  <Skeleton variant="text" width={100} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DefaultLayout>
+    );
+  }
+  
 
   return (
     <DefaultLayout>
@@ -32,17 +89,20 @@ function UserProfile(){
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="relative z-20 h-35 md:h-65">
+         
+          
           <img
             src={CoverOne}
             alt="profile cover"
             className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
           />
+        
 
         </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
-            <div className="relative drop-shadow-2">
-              <img src={userSix} alt="profile" />
+            <div className="relative drop-shadow-2 bottom-8">
+              <img src={user.profilePhoto ? photoBaseURL + user.profilePhoto : profileNone} alt="profile" className="h-full w-full rounded-tl-sm rounded-tr-sm  object-cover object-center" />
               <Link to="/update-profile"
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-orange text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -74,13 +134,13 @@ function UserProfile(){
           </div>
           <div className="mt-4">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              Alice Bob
+              {user &&  user.username}
             </h3>
-            <p className="font-medium">+216 58453217</p>
+            <p className="font-medium"> {user && user.number} </p>
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-1 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="mx-auto flex flex-col items-center justify-center  border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 
-                <span className="text-sm font-police">alice@gmail.com</span>
+                <span className="text-sm font-police">{user && user.email}</span>
               </div>
               
             </div>
