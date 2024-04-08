@@ -26,8 +26,8 @@ const SignupUser = () => {
     formData.append('username', data.username);
     formData.append('number', data.number);
     formData.append('password', data.password);
-    if (data.photo) {
-      formData.append('profilePhoto', data.photo[0]);
+    if (data.profileProfile) {
+      formData.append('profilePhoto', data.profileProfile[0]);
     }
     try {
 

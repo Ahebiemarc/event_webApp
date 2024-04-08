@@ -1,4 +1,4 @@
-import mongoose, {Document, Model, Schema} from "mongoose";
+import mongoose, {Document, Model, Query, Schema} from "mongoose";
 import { ReviewDataProps } from "./Review";
 
 
@@ -36,6 +36,8 @@ interface IEventModel extends Model<IEventDocument>{
     deleteEventById(eventId: string): Promise<IEventDocument>;
     updateEvent(eventId: EventDataProps, eventData: Partial<EventDataProps>): Promise<IEventDocument | null>;
     getAllEvents(): Promise<IEventDocument[] | null>;
+    getEventsWithLimit(limit: number): Query<IEventDocument[], IEventDocument>;
+    getEventsWithPagination(page: number, limit: number): Query<IEventDocument[], IEventDocument>;
 }
 
 const EventSchema = new mongoose.Schema<IEventDocument, IEventModel>({
@@ -96,6 +98,18 @@ EventSchema.statics.findEventByLocation = function(location: string){
 EventSchema.statics.getAllEvents = function() {
     return this.find().sort({date:-1}).exec();
 };
+
+EventSchema.statics.getEventsWithLimit = function(limit: number): Query<IEventDocument[], IEventDocument> {
+    return this.find().limit(limit);
+};
+
+// Méthode statique pour récupérer les événements avec pagination
+EventSchema.statics.getEventsWithPagination = function(page: number, limit: number): Query<IEventDocument[], IEventDocument> {
+    const startIndex = (page - 1) * limit;
+    return this.find().skip(startIndex).limit(limit);
+};
+
+
 
 
 

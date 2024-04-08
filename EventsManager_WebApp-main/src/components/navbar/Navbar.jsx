@@ -10,7 +10,7 @@ import {
 } from "@material-tailwind/react";
 import LoginUser from '../form/LoginUser';
 import { logoutUser } from '../../api/auth';
-import { photoBaseURL } from '../../screens/UserProfile';
+import { photoBaseURL } from '../../api/constant';
 
 
 function Navbar ()  {
@@ -23,6 +23,14 @@ function Navbar ()  {
   const location = useLocation();
 
   const profilePhotoURI = profilePhoto ? photoBaseURL + profilePhoto : profileNone
+
+  const getPhoto = () =>{
+    let photo= "";
+    if(!profilePhoto || profilePhoto === "undefined"){
+      return photo = profileNone
+    }
+    return photoBaseURL + profilePhoto
+  }
 
 
   const handleOpen = () => setOpen((cur) => !cur);
@@ -87,7 +95,7 @@ function Navbar ()  {
               )
           }
 
-           {isLoggedIn && <Link to="/profile" className="ml-5 text-[24px] cursor-pointer"><Avatar src={profilePhotoURI} alt="avatar" variant="circular" /></Link>}
+           {isLoggedIn && <Link to="/profile" className="ml-5 text-[24px] cursor-pointer"><Avatar src={getPhoto()} alt="avatar" variant="circular" /></Link>}
 
             {/*<Badge content="10"><span className="text-[24px] cursor-pointer ml-2"><FaBell /></span></Badge>*/}
         </div>

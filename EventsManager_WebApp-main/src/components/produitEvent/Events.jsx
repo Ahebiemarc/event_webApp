@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@material-tailwind/react";
 import {
   ArrowLongRightIcon,
@@ -9,17 +9,35 @@ import {
 import EventProducts from '../../data'
 import Event from './Event'
 import { Link } from 'react-router-dom';
+import { getEventsWithLimit } from '../../api/event';
 
 function Events(){
 
-  
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const limit = 10; // Par exemple, vous pouvez changer cette valeur selon vos besoins
+        const eventsData = await getEventsWithLimit(limit);
+        console.log('eventData:', eventsData);
+        setEvents(eventsData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erreur lors du chargement des événements:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []); 
 
   return (
     <main  className="my-[2.5rem] font-police">
         <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
-            {EventProducts.map((EventProduct) => (
-                <Link key={EventProduct.id} to={`/event/${EventProduct.id}`}>
-                 <Event  EventProduct={EventProduct}/>
+            {events.map((event) => (
+                <Link key={event._id} to={`/event/${event._id}`}>
+                 <Event event={event} />
                 </Link>
             ))}
  

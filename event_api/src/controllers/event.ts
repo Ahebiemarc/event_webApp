@@ -15,6 +15,8 @@ export const createEventController = async (req: Request, res: Response) => {
         const creator_id = req.userId
         const photo = req.file.path
         const correctPhotoPath = photo.split(path.sep).join("/")
+        console.log(title, description, price, date, location, correctPhotoPath, creator_id);
+        
 
         if (!title || !description || !date || !location || !photo) {
             return res.status(400).json({ message: "tous les champs sont requis" });
@@ -135,3 +137,34 @@ export const findEvent = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Erreur lors de la récupération de l'évènement.", error: error.message });
     }
 }
+
+export const getEventsWithLimitController = async (req: Request, res: Response) => {
+    try {
+        const limit = parseInt(req.query.limit as string, 10); // Convertir la limite en nombre entier
+        if (!limit || isNaN(limit)) {
+            return res.status(400).json({ message: "La limite est invalide." });
+        }
+
+        // Utilisez la méthode statique pour récupérer les événements avec une limite
+        const events = await EventModel.getEventsWithLimit(limit).exec();
+
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message });
+    }
+};
+
+
+export const getEventsWithPaginationController = async (req: Request, res: Response) => {
+    try {
+        const page = parseInt(req.query.page as string, 10) || 1; // Page par défaut: 1
+        const limit = parseInt(req.query.limit as string, 10) || 10; // Limite par défaut: 10
+
+        // Utiliser la méthode statique pour récupérer les événements avec pagination
+        const events = await EventModel.getEventsWithPagination(page, limit).exec();
+
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message });
+    }
+};

@@ -3,15 +3,15 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../layout/DefaultLayout';
 import CoverOne from '../images/cover/cover-01.png';
 import profileNone from '../images/user/profileNone.png'
-import userSix from '../images/user/user-06.png'
 import { Link } from 'react-router-dom';
 import CreateEvent from '../components/produitEvent/CreateEvent';
 import EventProducts from '../data';
 import Event from '../components/produitEvent/Event';
 import { getUser } from '../api/user';
 import { Skeleton } from '@mui/material';
+import { photoBaseURL } from '../api/constant';
+import { Avatar } from '@material-tailwind/react';
 
-export const photoBaseURL = "http://localhost:8000/";
 
 function UserProfile(){
 
@@ -29,6 +29,7 @@ function UserProfile(){
    const userIdString = userId ? String(userId) : ''
 
 
+   
 
 
    useEffect(() => {
@@ -48,7 +49,16 @@ function UserProfile(){
     }
 
     fetchData();
-  }, [user, userIdString]);
+  }, [user]);
+
+  const getPhoto = () =>{
+    let photo= "";
+    if(user.profilePhoto === "" || user.profilePhoto === "undefined"){
+      return photo = profileNone
+    }
+    return photoBaseURL + user.profilePhoto
+  }
+
 
 
    const handleOpen = (e) => {
@@ -102,7 +112,7 @@ function UserProfile(){
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2 bottom-8">
-              <img src={user.profilePhoto ? photoBaseURL + user.profilePhoto : profileNone} alt="profile" className="h-full w-full rounded-tl-sm rounded-tr-sm  object-cover object-center" />
+              <Avatar src={getPhoto()} alt="profile" className="h-[200px] w-[200px] rounded-full  object-cover object-center" />
               <Link to="/update-profile"
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-orange text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"

@@ -10,10 +10,9 @@ import { Button } from "@material-tailwind/react";
 
 function SingleEvent () {
 
-  // Utiliser useEffect pour gérer le scroll lorsque la page est rendue
   useEffect(() => {
-    window.scrollTo(0, 0); // Faire défiler vers le haut de la page
-  }, []); // Le tableau vide en tant que deuxième argument assure que cela ne se produit qu'une seule fois lors du montage du composant
+    window.scrollTo(0, 0);
+  }, []); 
 
 
   return (

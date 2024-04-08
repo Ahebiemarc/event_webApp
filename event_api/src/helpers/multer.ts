@@ -40,7 +40,7 @@ export const uploadImgProfile = multer({
 })
 
 export const uploadImgEvent = multer({
-    storage: storageImgProfile,
+    storage: storageImgEvent,
     limits: {
         fileSize: 1024 * 1024 * 5 // Limite de taille de fichier à 5MB
     },
