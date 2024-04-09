@@ -126,13 +126,14 @@ export const updateEventController = async (req: Request, res: Response) => {
     }
 };
 
-export const findEvent = async (req: Request, res: Response) => {
+export const findEventController = async (req: Request, res: Response) => {
     try {
-        const search = req.body
-        const filter  = {}
-        //const eventByTitle = await EventModel.findEventByTitle
+        const {search} = req.body
+        const uniqueEvents = await EventModel.findUniqueEvents(search, search, search);
 
-        res.status(200).json(event);
+        
+
+        res.status(200).json(uniqueEvents);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération de l'évènement.", error: error.message });
     }
@@ -168,3 +169,28 @@ export const getEventsWithPaginationController = async (req: Request, res: Respo
         res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message });
     }
 };
+
+export const getAllEventTagsController = async (req: Request, res: Response) => {
+    try {
+        // Utiliser la méthode statique pour récupérer tous les titres d'événement
+        const titles = await EventModel.getAllEventTags();
+
+        res.status(200).json(titles);
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération des titres d'événement.", error: error.message });
+    }
+};
+
+
+export const getEventsByUserIdController = async (req: Request, res: Response) => {
+    try {
+        const userId = req.userId;
+        const events = await EventModel.getEventsByUserId(userId)
+        res.status(200).json(events)
+    } catch (error) {
+        res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message })
+    }
+};
+
+
+

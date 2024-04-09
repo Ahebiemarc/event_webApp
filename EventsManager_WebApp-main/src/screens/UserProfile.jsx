@@ -25,8 +25,8 @@ function UserProfile(){
    const [error, setError] = useState(null);
 
 
-   const userId = localStorage.getItem('user');
-   const userIdString = userId ? String(userId) : ''
+   const userId = sessionStorage.getItem('user');
+   
 
 
    
@@ -38,7 +38,7 @@ function UserProfile(){
 
     const fetchData = async () => {
       try {
-        const userData = await getUser(userIdString);
+        const userData = await getUser(userId);
         setUser(userData);
         setLoading(false);
       } catch (error) {

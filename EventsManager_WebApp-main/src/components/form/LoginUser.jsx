@@ -33,8 +33,8 @@ const LoginUser = ({open, handleOpen}) => {
       try {
         const response = await loginUser(data);
         const {user} = response
-        localStorage.setItem('user', user._id);
-        localStorage.setItem('profilePhoto', user.profilePhoto);
+        sessionStorage.setItem('user', user._id);
+        sessionStorage.setItem('profilePhoto', user.profilePhoto);
         //console.log(response);
         reset();
         redirectHome();

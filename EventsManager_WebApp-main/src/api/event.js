@@ -64,3 +64,5 @@ export const fetchEventsWithPagination = async (page = 1, limit = 20) => {
     throw error; // Vous pouvez gérer l'erreur différemment selon vos besoins
   }
 };
+
+

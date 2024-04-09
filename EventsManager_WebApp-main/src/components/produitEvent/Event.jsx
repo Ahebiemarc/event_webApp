@@ -15,7 +15,7 @@ export const calculateAverageRating = (reviews) => {
    
   
 export default function ({event}) {
-    
+
     const ref = useRef(null);
     const {scrollYProgress} = useScroll({
         target: ref,
@@ -60,7 +60,8 @@ export default function ({event}) {
         viewport={{once:false, amount:0.5}}
         transition={{staggerChildren:0.5}}
         >
-            <motion.div
+           {event && (
+             <motion.div
              //whileHover={{ scale: 0.8, rotate: 10 }}
              whileTap={{
              scale: 1.1,
@@ -134,7 +135,9 @@ export default function ({event}) {
                     </CardBody>
                     
                 </Card>
+        
                 </motion.div>
+             )}
         </motion.div>
     );
 }

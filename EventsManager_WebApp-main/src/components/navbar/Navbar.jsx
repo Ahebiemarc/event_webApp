@@ -17,12 +17,12 @@ function Navbar ()  {
 
   // Dialog Component Connexion
   const [open, setOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('user'));
-  const profilePhoto = localStorage.getItem('profilePhoto');
+  const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem('user'));
+  const profilePhoto = sessionStorage.getItem('profilePhoto');
   const navigate =  useNavigate();
   const location = useLocation();
 
-  const profilePhotoURI = profilePhoto ? photoBaseURL + profilePhoto : profileNone
+  //const profilePhotoURI = profilePhoto ? photoBaseURL + profilePhoto : profileNone
 
   const getPhoto = () =>{
     let photo= "";
@@ -49,8 +49,8 @@ function Navbar ()  {
   const handleLogout = async () =>{
     try {
       const response = await logoutUser()
-      localStorage.removeItem('user');
-      localStorage.removeItem('profilePhoto')
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('profilePhoto')
       setIsLoggedIn(false);
       redirectHome();
     } catch (error) {

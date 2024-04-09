@@ -98,9 +98,9 @@ export const loginUserController = async (req: express.Request, res: express.Res
         await user.save();
 
         // Définissez la durée d'expiration du cookie en millisecondes (ici 1 heure)
-        const maxAge = 3600000; // 1 heure en millisecondes
+        //const maxAge = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
 
-        res.cookie('MARKUS-AUTH', user.authentication.sessionToken, {maxAge, httpOnly:true});
+        res.cookie('MARKUS-AUTH', user.authentication.sessionToken, {httpOnly:true});
 
         // Envoyez le cookie avec le token JWT et spécifiez la durée d'expiration
         res.status(201).json({ message: 'Utilisateur connecté avec succès', user }).end();

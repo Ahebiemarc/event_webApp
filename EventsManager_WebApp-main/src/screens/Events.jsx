@@ -48,7 +48,7 @@ function Events () {
       <TitleContainer />
       <main  className="my-[2.5rem] font-police">
         <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
-            {events.map((event) => (
+            {events && events.map((event) => (
                 <Link key={event._id} to={`/event/${event._id}`}>
                  <Event  {...{event}}/>
                 </Link>

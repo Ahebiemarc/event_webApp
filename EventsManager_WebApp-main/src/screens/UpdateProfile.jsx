@@ -56,7 +56,7 @@ const UpdateProfile = () => {
   const handleSubmit = async (e) =>{
     e.preventDefault();
     try {
-      await updateUser(localStorage.getItem("user"), formData);
+      await updateUser(sessionStorage.getItem("user"), formData);
       console.log("Utilisateur mis à jour avec succès !");
       // Redirige l'utilisateur vers une autre page  après la mise à jour
       navigate("/profile");

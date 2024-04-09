@@ -39,9 +39,9 @@ export const updateUser = async (userId, userData) => {
       withCredentials: true
     });
 
-     // Si la mise à jour réussit, enregistrez l'URL de l'image dans le localStorage
+     // Si la mise à jour réussit, enregistrez l'URL de l'image dans le sessionStorage
      if (userData.profilePhoto) {
-      localStorage.setItem('profilePhoto', response.data.profilePhoto);
+      sessionStorage.setItem('profilePhoto', response.data.profilePhoto);
     }
 
     return response.data; // Les données retournées par l'API
