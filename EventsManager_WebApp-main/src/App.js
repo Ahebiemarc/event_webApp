@@ -50,7 +50,7 @@ function App() {
         </>
         } />
       
-        <Route path="/update-event" element={
+        <Route path="/update-event/:id" element={
         <>
         <PageTitle title="ton évènement | post ton évènement" />
         <UpdateEvent />

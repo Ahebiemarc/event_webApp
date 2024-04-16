@@ -115,12 +115,15 @@
   .title-nav-container{
     @apply text-[#222] cursor-pointer text-[1.1rem] text-center
   }
+
+  
   
 }
 
 body{
   background-color: #fdfdfe;
 }
+
 
 /*body {
   margin: 0;

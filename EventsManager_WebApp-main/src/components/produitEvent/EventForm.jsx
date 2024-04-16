@@ -4,7 +4,7 @@ import userThree from '../../images/user/user-03.png'
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../api/event";
 
-const EventForm = ({children}) =>{
+const EventForm = ({children, event}) =>{
 
   const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
@@ -236,7 +236,7 @@ const EventForm = ({children}) =>{
               <div >{/*form 2*/}
                 <div className="mb-4 flex items-center gap-3">
                   <div className="h-14 w-14 rounded-full">
-                    <img src={userThree} alt="User" />
+                    {/*<img src={userThree} alt="User" />*/}
                   </div>
                   <div>
                     <span className="mb-1.5 text-black dark:text-white">

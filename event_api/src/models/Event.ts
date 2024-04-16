@@ -42,7 +42,7 @@ interface IEventModel extends Model<IEventDocument>{
     getAllEvents(): Promise<IEventDocument[] | null>;
     getEventsWithLimit(limit: number): Query<IEventDocument[], IEventDocument>;
     getEventsWithPagination(page: number, limit: number): Query<IEventDocument[], IEventDocument>;
-    getEventsByUserId(userId: string): Promise<IEventDocument[] | null>;
+    getEventsByUserId(userId: string, page: number, limit: number): Query<IEventDocument[], IEventDocument>;
     getAllEventTags(): Query<string[], null>;
     findUniqueEvents(eventTitle: string, eventLocation: string, eventPrice: string | number): Promise<IEventDocument[] | null>;
 }
@@ -121,8 +121,9 @@ EventSchema.statics.getEventsWithPagination = function(page: number, limit: numb
     return this.find().sort({date:-1}).skip(startIndex).limit(limit);
 };
 
-EventSchema.statics.getEventsByUserId = function(userId: string){
-    return this.find({creator_id: userId}).sort({date: -1}).exec();
+EventSchema.statics.getEventsByUserId = function(userId: string, page: number, limit: number){
+    const startIndex = (page - 1) * limit;
+    return this.find({creator_id: userId}).sort({date: -1}).skip(startIndex).limit(limit).exec();
 };
 
 EventSchema.statics.getAllEventTags = function() {

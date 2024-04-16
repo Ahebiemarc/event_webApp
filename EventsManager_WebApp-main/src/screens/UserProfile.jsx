@@ -8,10 +8,15 @@ import CreateEvent from '../components/produitEvent/CreateEvent';
 import EventProducts from '../data';
 import Event from '../components/produitEvent/Event';
 import { getUser } from '../api/user';
-import { Skeleton } from '@mui/material';
+import { Pagination, Skeleton } from '@mui/material';
 import { photoBaseURL } from '../api/constant';
 import { Avatar } from '@material-tailwind/react';
+import { calculateTotalPages } from './Events';
+import { fetchAllEventByUserId } from '../api/event';
 
+
+
+const limitPerPage = 3;
 
 function UserProfile(){
 
@@ -23,7 +28,10 @@ function UserProfile(){
    const [user, setUser] = useState(null);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState(null);
-
+   const [events, setEvents] = useState([]);
+   const [loadingEvents, setLoadingEvents] = useState(true);
+   const [page, setPage] = useState(1);
+   const [totalPages, setTotalPages] = useState(1);
 
    const userId = sessionStorage.getItem('user');
    
@@ -51,10 +59,34 @@ function UserProfile(){
     fetchData();
   }, [user]);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoadingEvents(true);
+        const eventData = await fetchAllEventByUserId(page);
+        setEvents(eventData);
+        const totalPages = calculateTotalPages(eventData, limitPerPage);
+        setTotalPages(totalPages);
+        setLoadingEvents(false);
+        
+      } catch (error) {
+        console.error('Erreur lors du chargement des événements:', error);
+            setLoadingEvents(false);
+      }
+    }
+    fetchEvents();
+  }, [page]);
+
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+  
+
   const getPhoto = () =>{
-    let photo= "";
+    
     if(user.profilePhoto === "" || user.profilePhoto === "undefined"){
-      return photo = profileNone
+      return profileNone
     }
     return photoBaseURL + user.profilePhoto
   }
@@ -68,7 +100,7 @@ function UserProfile(){
 
    if (loading) {
     return (
-      <DefaultLayout>
+      <DefaultLayout overflow_y="auto">
         <Breadcrumb pageName="Profile" />
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <Skeleton variant="rectangular" height={200} className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center" />
@@ -94,7 +126,7 @@ function UserProfile(){
   
 
   return (
-    <DefaultLayout>
+    <DefaultLayout overflow_y="auto">
       <Breadcrumb pageName="Profile" />
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -112,7 +144,7 @@ function UserProfile(){
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2 bottom-8">
-              <Avatar src={getPhoto()} alt="profile" className="h-[200px] w-[200px] rounded-full  object-cover object-center" />
+              <Avatar src={user && getPhoto()} alt="profile" className="h-[200px] w-[200px] rounded-full  object-cover object-center" />
               <Link to="/update-profile"
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-orange text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -162,16 +194,45 @@ function UserProfile(){
           </div>
         </div>
       </div>
-      <div className='mt-16 bg-white z-[1000]'>
+      <div className='mt-16 bg-white z-[1000] overflow-visible'>
         <h3 className='text-2xl font-sans font-bold text-blue'>Mes évènements</h3>
-        <div className='my-[2.5rem] font-police'>
-          <div className="grid grid-cols-4 gap-y-20 mx-[3rem] w-full">
-          {Myevent.map((event) => (
-                <Link>
-                 <Event key={event.id} EventProduct={event}/>
-                </Link>
-            ))}
+        <main  className="my-[2.5rem] font-police">
+          {loadingEvents ? (
+            <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
+            {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index}>
+                  {/* Skeleton for each event */}
+                  <div>
+                    <Skeleton variant="rectangular" width={210} height={118} />
+                    <Skeleton variant="text" width={210} />
+                    <Skeleton variant="text" width={100} />
+                  </div>
+                </div>
+                ))}
+                </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
+              {events && events.map((event) => (
+                  <Link key={event._id} to={`/update-event/${event._id}`}>
+                  <Event  {...{event}}/>
+                  </Link>
+              ))}
+  
           </div>
+          
+          )
+          }
+          
+        
+      </main>
+        <div className="pagination-container fixed  bottom-0 right-0 mr-34 mb-4">
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+          />
         </div>
       </div>
     </DefaultLayout>

@@ -4,19 +4,19 @@ import React, { useState, ReactNode } from 'react';
 import Navbar from '../components/navbar/Navbar';
 import Footer from '../components/footer/Footer';
 
-const DefaultLayout = ({ children }) => {
+const DefaultLayout = ({ children, overflow_y }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      <div className="flex h-screen overflow-hidden">
+      <div className={`flex h-screen overflow-${overflow_y}`}>
         {/* <!-- ===== Sidebar Start ===== --> 
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />*/}
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        <div className={`relative flex flex-1 flex-col overflow-y-${overflow_y} overflow-x-${overflow_y}`}>
           {/* <!-- ===== Header Start ===== --> */}
           <Navbar  />
           {/* <!-- ===== Header End ===== --> */}

@@ -128,7 +128,7 @@ export const updateEventController = async (req: Request, res: Response) => {
 
 export const findEventController = async (req: Request, res: Response) => {
     try {
-        const {search} = req.body
+        const search = req.query.search.toString();
         const uniqueEvents = await EventModel.findUniqueEvents(search, search, search);
 
         
@@ -185,12 +185,16 @@ export const getAllEventTagsController = async (req: Request, res: Response) => 
 export const getEventsByUserIdController = async (req: Request, res: Response) => {
     try {
         const userId = req.userId;
-        const events = await EventModel.getEventsByUserId(userId)
+        const page = parseInt(req.query.page as string, 10) || 1; // Page par défaut: 1
+        const limit = parseInt(req.query.limit as string, 10) || 4; // Limite par défaut: 10
+        const events = await EventModel.getEventsByUserId(userId, page, limit);
         res.status(200).json(events)
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message })
     }
 };
+
+
 
 
 
