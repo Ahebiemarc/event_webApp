@@ -4,6 +4,8 @@ import { EventModel } from "../models/Event";
 import { ReviewModel } from "../models/Review";
 import fs from 'fs';
 import { promisify } from 'util';
+import { AdhesionModel } from "../models/Adhesion";
+import { UserModel } from "../models/User";
 
 const unlinkAsync = promisify(fs.unlink);
 
@@ -44,8 +46,18 @@ export const getEventByIdController = async (req: Request, res: Response) => {
         const eventId = req.params.eventId
         const event = await EventModel.getEventById(eventId);
         const reviewEvent = await ReviewModel.getReviewsByEventId(eventId)
+        const eventSubscriber = await AdhesionModel.getAllAdh()
+        const allUsers = await UserModel.getAllUsers();
+        const filteredSubscribers = eventSubscriber.filter(subscriber => subscriber.eventId === eventId).map(subscriber => subscriber.userId);
+
+        const userIdSub: string[]  = filteredSubscribers;
+        const profilePhotos = userIdSub.map(userId => {
+            const user = allUsers.find(user => user._id.toString() === userId);
+            return user ? user.profilePhoto : null;
+        });
 
         event.reviews = reviewEvent
+        event.subscribers = profilePhotos
 
         event.save()
 
@@ -58,8 +70,36 @@ export const getEventByIdController = async (req: Request, res: Response) => {
 
 export const getAllEventsController = async (req: Request, res: Response) => {
     try {
-        const events = await EventModel.getAllEvents()
-        res.status(200).json(events)
+        // Récupérer tous les événements
+        const events = await EventModel.getAllEvents();
+
+        // Récupérer toutes les adhésions
+        const allAdhesions = await AdhesionModel.getAllAdh();
+        // Récupérer tous les utilisateurs
+        const allUsers = await UserModel.getAllUsers();
+
+        // Associer les profilePhoto de chaque utilisateur correspondant à userId dans event.subscribers
+        const updatedEvents = events.map(event => {
+            // Récupérer les adhésions correspondant à l'événement actuel
+            const adhesionsForEvent = allAdhesions.filter(adhesion => adhesion.eventId === event._id.toString());
+
+            // Récupérer les userId des adhésions
+            const userIds = adhesionsForEvent.map(adhesion => adhesion.userId);
+
+            // Récupérer les profilePhoto des utilisateurs correspondants
+            const profilePhotos = userIds.map(userId => {
+                const user = allUsers.find(user => user._id.toString() === userId);
+                return user ? user.profilePhoto : null;
+            });
+
+            // Assigner les profilePhoto à event.subscribers
+            event.subscribers = profilePhotos;
+            
+            event.save();
+
+            return event;
+        });
+        res.status(200).json(updatedEvents)
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des évènements.", error: error.message })
     }
@@ -131,9 +171,35 @@ export const findEventController = async (req: Request, res: Response) => {
         const search = req.query.search.toString();
         const uniqueEvents = await EventModel.findUniqueEvents(search, search, search);
 
+        // Récupérer toutes les adhésions
+        const allAdhesions = await AdhesionModel.getAllAdh();
+        // Récupérer tous les utilisateurs
+        const allUsers = await UserModel.getAllUsers();
+
+        // Associer les profilePhoto de chaque utilisateur correspondant à userId dans event.subscribers
+        const updatedEvents = uniqueEvents.map(event => {
+            // Récupérer les adhésions correspondant à l'événement actuel
+            const adhesionsForEvent = allAdhesions.filter(adhesion => adhesion.eventId === event._id.toString());
+
+            // Récupérer les userId des adhésions
+            const userIds = adhesionsForEvent.map(adhesion => adhesion.userId);
+
+            // Récupérer les profilePhoto des utilisateurs correspondants
+            const profilePhotos = userIds.map(userId => {
+                const user = allUsers.find(user => user._id.toString() === userId);
+                return user ? user.profilePhoto : null;
+            });
+
+            // Assigner les profilePhoto à event.subscribers
+            event.subscribers = profilePhotos;
+            
+            event.save();
+
+            return event;
+        });
         
 
-        res.status(200).json(uniqueEvents);
+        res.status(200).json(updatedEvents);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération de l'évènement.", error: error.message });
     }
@@ -149,7 +215,35 @@ export const getEventsWithLimitController = async (req: Request, res: Response) 
         // Utilisez la méthode statique pour récupérer les événements avec une limite
         const events = await EventModel.getEventsWithLimit(limit).exec();
 
-        res.status(200).json(events);
+         // Récupérer toutes les adhésions
+         const allAdhesions = await AdhesionModel.getAllAdh();
+         // Récupérer tous les utilisateurs
+         const allUsers = await UserModel.getAllUsers();
+ 
+         // Associer les profilePhoto de chaque utilisateur correspondant à userId dans event.subscribers
+         const updatedEvents = events.map(event => {
+             // Récupérer les adhésions correspondant à l'événement actuel
+             const adhesionsForEvent = allAdhesions.filter(adhesion => adhesion.eventId === event._id.toString());
+ 
+             // Récupérer les userId des adhésions
+             const userIds = adhesionsForEvent.map(adhesion => adhesion.userId);
+ 
+             // Récupérer les profilePhoto des utilisateurs correspondants
+             const profilePhotos = userIds.map(userId => {
+                 const user = allUsers.find(user => user._id.toString() === userId);
+                 return user ? user.profilePhoto : null;
+             });
+ 
+             // Assigner les profilePhoto à event.subscribers
+             event.subscribers = profilePhotos;
+             
+             event.save();
+ 
+             return event;
+         });
+         
+
+        res.status(200).json(updatedEvents);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message });
     }
@@ -164,7 +258,35 @@ export const getEventsWithPaginationController = async (req: Request, res: Respo
         // Utiliser la méthode statique pour récupérer les événements avec pagination
         const events = await EventModel.getEventsWithPagination(page, limit).exec();
 
-        res.status(200).json(events);
+        // Récupérer toutes les adhésions
+        const allAdhesions = await AdhesionModel.getAllAdh();
+        // Récupérer tous les utilisateurs
+        const allUsers = await UserModel.getAllUsers();
+
+        // Associer les profilePhoto de chaque utilisateur correspondant à userId dans event.subscribers
+        const updatedEvents = events.map(event => {
+            // Récupérer les adhésions correspondant à l'événement actuel
+            const adhesionsForEvent = allAdhesions.filter(adhesion => adhesion.eventId === event._id.toString());
+
+            // Récupérer les userId des adhésions
+            const userIds = adhesionsForEvent.map(adhesion => adhesion.userId);
+
+            // Récupérer les profilePhoto des utilisateurs correspondants
+            const profilePhotos = userIds.map(userId => {
+                const user = allUsers.find(user => user._id.toString() === userId);
+                return user ? user.profilePhoto : null;
+            });
+
+            // Assigner les profilePhoto à event.subscribers
+            event.subscribers = profilePhotos;
+            
+            event.save();
+
+            return event;
+        });
+        
+
+        res.status(200).json(updatedEvents);
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message });
     }
@@ -188,7 +310,35 @@ export const getEventsByUserIdController = async (req: Request, res: Response) =
         const page = parseInt(req.query.page as string, 10) || 1; // Page par défaut: 1
         const limit = parseInt(req.query.limit as string, 10) || 4; // Limite par défaut: 10
         const events = await EventModel.getEventsByUserId(userId, page, limit);
-        res.status(200).json(events)
+
+        // Récupérer toutes les adhésions
+        const allAdhesions = await AdhesionModel.getAllAdh();
+        // Récupérer tous les utilisateurs
+        const allUsers = await UserModel.getAllUsers();
+
+        // Associer les profilePhoto de chaque utilisateur correspondant à userId dans event.subscribers
+        const updatedEvents = events.map(event => {
+            // Récupérer les adhésions correspondant à l'événement actuel
+            const adhesionsForEvent = allAdhesions.filter(adhesion => adhesion.eventId === event._id.toString());
+
+            // Récupérer les userId des adhésions
+            const userIds = adhesionsForEvent.map(adhesion => adhesion.userId);
+
+            // Récupérer les profilePhoto des utilisateurs correspondants
+            const profilePhotos = userIds.map(userId => {
+                const user = allUsers.find(user => user._id.toString() === userId);
+                return user ? user.profilePhoto : null;
+            });
+
+            // Assigner les profilePhoto à event.subscribers
+            event.subscribers = profilePhotos;
+            
+            event.save();
+
+            return event;
+        });
+        
+        res.status(200).json(updatedEvents)
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la récupération des événements.", error: error.message })
     }

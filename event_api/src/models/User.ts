@@ -11,6 +11,7 @@ interface IUserDocument extends Document {
   };
   profilePhoto?: string;
   is_admin?: boolean;
+  sold: number;
 }
 
 type UserDataProps = {
@@ -34,6 +35,7 @@ interface IUserModel extends Model<IUserDocument> {
   updateUser(eventId: IUserDocument, eventData: Partial<UserDataProps>): Promise<IUserDocument | null>;
   getUserById(userId: string): Promise<IUserDocument | null>
   getAllUsers(): Promise<IUserDocument[] | null>;
+  subtractSoldValue (userId: string, value: number): Promise<IUserDocument | null>
   
   
 }
@@ -49,6 +51,7 @@ const UserSchema = new mongoose.Schema<IUserDocument, IUserModel>({
   },
   profilePhoto: { type: String, required: false},
   is_admin: { type: Boolean, required: true, default: false},
+  sold: { type: Number, required: true, default: 100},
 });
 
 UserSchema.statics.getUserByUsername = function (username: string) {
@@ -94,6 +97,27 @@ UserSchema.statics.deleteUserById = function (userId: string) {
 UserSchema.statics.getAllUsers = function () {
   return this.find().exec();
 }
+
+UserSchema.statics.subtractSoldValue = async function(userId: string, value: number): Promise<IUserDocument | null> {
+  try {
+    const user = await this.findById(userId);
+    if (!user) {
+      return null;
+    }
+
+    if (user.sold >= value) {
+      user.sold -= value;
+      await user.save();
+      return user;
+    } else {
+      console.log(`La valeur de sold (${user.sold}) est inférieure à la valeur à soustraire (${value}). Aucune soustraction effectuée.`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Erreur lors de la soustraction de la valeur vendue :", error);
+    return null;
+  }
+};
 
 
 export const UserModel = mongoose.model<IUserDocument, IUserModel>('User', UserSchema);

@@ -11,18 +11,19 @@ const extractDigits = (value: string): string => {
 interface IEventDocument extends Document{
     title: string;
     description: string;
-    price: number | string
+    price: string
     date: string;
     location: string;
     creator_id: string;
     photo: string;
     reviews?: ReviewDataProps[];
+    subscribers?: string[]
 }
 
 type EventDataProps = {
     title: string;
     description: string;
-    price: number | string;
+    price: string;
     date: string;
     location: string;
     creator_id: string;
@@ -34,7 +35,7 @@ interface IEventModel extends Model<IEventDocument>{
     getEventById(eventId: string): Promise<IEventDocument | null>;
     findEvent(filter: any): Promise<IEventDocument[] | null>;
     findEventByTitle(title: string): Promise<IEventDocument[] | null>;
-    findEventByPrice(price: number | string): Promise<IEventDocument[] | null>;
+    findEventByPrice(price:string): Promise<IEventDocument[] | null>;
     findEventByDate(date: string): Promise<IEventDocument[] | null>;
     findEventByLocation(location: string): Promise<IEventDocument[] | null>;
     deleteEventById(eventId: string): Promise<IEventDocument>;
@@ -44,7 +45,7 @@ interface IEventModel extends Model<IEventDocument>{
     getEventsWithPagination(page: number, limit: number): Query<IEventDocument[], IEventDocument>;
     getEventsByUserId(userId: string, page: number, limit: number): Query<IEventDocument[], IEventDocument>;
     getAllEventTags(): Query<string[], null>;
-    findUniqueEvents(eventTitle: string, eventLocation: string, eventPrice: string | number): Promise<IEventDocument[] | null>;
+    findUniqueEvents(eventTitle: string, eventLocation: string, eventPrice: string): Promise<IEventDocument[] | null>;
 }
 
 const EventSchema = new mongoose.Schema<IEventDocument, IEventModel>({
@@ -55,7 +56,8 @@ const EventSchema = new mongoose.Schema<IEventDocument, IEventModel>({
     location: { type: String, required: true },
     creator_id: { type: String, required: true },
     photo: { type: String, required: true },
-    reviews: [{ type: Object }] // tableau de reviews
+    reviews: [{ type: Object }], // tableau de reviews
+    subscribers: { type: [String], default:null},
 });
 
 // méhode static pour le modèle de l'évènement
@@ -149,7 +151,7 @@ EventSchema.statics.getAllEventTags = function() {
     ]).exec();
 };
 
-EventSchema.statics.findUniqueEvents = async function(title: string, location: string, price: number | string) {
+EventSchema.statics.findUniqueEvents = async function(title: string, location: string, price:string) {
     const titleEvents = await this.findEventByTitle(title);
     const locationEvents = await this.findEventByLocation(location);
     const priceEvents = await this.findEventByPrice(price);
