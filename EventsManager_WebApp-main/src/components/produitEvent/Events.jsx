@@ -15,6 +15,7 @@ function Events(){
 
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [subUser, setSubUser] = useState([]);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -32,12 +33,15 @@ function Events(){
     fetchEvents();
   }, []); 
 
+
+  
+
   return (
     <main  className="my-[2.5rem] font-police">
         <div className="grid grid-cols-4 gap-y-20 mx-[3rem]">
             {events.map((event) => (
                 <Link key={event._id} to={`/event/${event._id}`}>
-                 <Event event={event} />
+                 <Event event={event}  />
                 </Link>
             ))}
  

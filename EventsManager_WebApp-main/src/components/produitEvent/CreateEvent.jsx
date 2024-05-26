@@ -9,8 +9,7 @@ const CreateEvent = ({open, handleOpen}) => {
         size="xl"
         open={open}
         handler={handleOpen}
-        onScroll={true}
-        //className="overflow-y-auto max-h-screen"
+        className="overflow-y-auto max-h-screen"
         >
             <EventForm />
         </Dialog>

@@ -52,14 +52,14 @@ const Contact = () => {
                                 </div>
                             </div>
                             <div className="ml-6 grow">
-                                <p className="mb-2 font-bold dark:text-white">
+                                <p className="mb-2 font-bold dark:text-white text-xl">
                                 Technical support
                                 </p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
-                                support@example.com
+                                Deazon0353@gmail.com
                                 </p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
-                                +216 234-567-89
+                                +216 51-855-932
                                 </p>
                             </div>
                             </div>
@@ -76,11 +76,11 @@ const Contact = () => {
                                 </div>
                             </div>
                             <div className="ml-6 grow">
-                                <p className="mb-2 font-bold dark:text-white">
+                                <p className="mb-2 font-bold dark:text-white text-xl">
                                 Sales questions
                                 </p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
-                                sales@example.com
+                                sales@Events-game.com
                                 </p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
                                 +216 234-567-89
@@ -100,7 +100,7 @@ const Contact = () => {
                                 </div>
                             </div>
                             <div className="ml-6 grow">
-                                <p className="mb-2 font-bold dark:text-white">Press</p>
+                                <p className="mb-2 font-bold dark:text-white text-xl">Press</p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
                                 press@example.com
                                 </p>
@@ -122,7 +122,7 @@ const Contact = () => {
                                 </div>
                             </div>
                             <div className="ml-6 grow">
-                                <p className="mb-2 font-bold dark:text-white">Bug report</p>
+                                <p className="mb-2 font-bold dark:text-white text-xl">Bug report</p>
                                 <p className="text-neutral-500 dark:text-neutral-200">
                                 bugs@example.com
                                 </p>

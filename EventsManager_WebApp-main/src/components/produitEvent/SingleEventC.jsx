@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {StarIcon} from "@heroicons/react/24/solid";
 import { getEventById } from "../../api/event";
 import { Rating, Skeleton } from "@mui/material";
 import { photoBaseURL } from "../../api/constant";
 import { calculateAverageRating } from "./Event";
+import { adhererEvent } from "../../api/adhesion";
+import { toast } from 'react-toastify'
+import { Typography, Avatar } from "@material-tailwind/react";
+
+
+import UserNone  from "../../images/user/profileNone.png";
+import ToastSuccess from "../toast/ToastSuccess";
+
 
 
 function multiplierByTwo(input) {
@@ -29,6 +37,10 @@ const SingleEventC = () => {
   const { id } = useParams(); // Récupérer l'ID de l'événement à partir de l'URL
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [subscribe, setSubscribe] = useState(false);
+  const [errorSub, setErrorSub] = useState(null)
+  const navigate =  useNavigate();
+
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -43,11 +55,26 @@ const SingleEventC = () => {
     };
 
     fetchEvent();
-  }, [id]); 
+  }, [id]);
+
+  const adhEvent = async () => {
+    try {
+      const r = await adhererEvent(id);
+      navigate('/');
+      setSubscribe(true);
+      toast.success(`Adhésion réussie!`);
+    } catch (error) {
+      console.error('Erreur lors de l\'adhésion:', error);
+      setSubscribe(false);
+      setErrorSub(error.response.data.message);
+      toast.error(`${error.response.data.message}`);
+    }
+  };
 
   if(loading) {
     return (
       <main>
+
       <div className="main-wrapper flex flex-col md:flex-row md:px-[200px] md:py-[100px] relative">
         <div className="image md:basis-1/2 md:flex md:flex-col md:justify-between">
           <div className="hidden md:block large-image">
@@ -107,6 +134,8 @@ const SingleEventC = () => {
 
   return (
     <main>
+      {errorSub &&  <ToastSuccess />}
+      {!errorSub &&  <ToastSuccess />}
       <div className="main-wrapper flex flex-col md:flex-row md:px-[200px] md:py-[100px] relative">
         <div className="image md:basis-1/2 md:flex md:flex-col md:justify-between">
           <div className="hidden md:block large-image">
@@ -120,12 +149,12 @@ const SingleEventC = () => {
 
         <div className="description p-6 md:basis-1/2 md:py-[40px]">
           <p className="text-green text-[14px] tracking-widest uppercase font-[700] mb-6">
-            Night Club
+            NN
           </p>
           <h1 className="text-3xl text-orange font-police md:text-4xl capitalize font-[700]">
             {event.title} <br />
           </h1>
-          <p className="hidden md:block font-police text-darkGrayishBlue my-10 leading-7">
+          <p className="hidden md:block font-sans text-darkGrayishBlue my-10 leading-7 text-sm">
             {event.description}
           </p>
 
@@ -146,12 +175,38 @@ const SingleEventC = () => {
           <div className="buttons-container flex flex-col md:flex-row mt-8">
             <div className="state w-[100%] flex justify-around md:justify-center items-center space-x-10 bg-lightGrayishBlue rounded-lg p-3 md:p-2 md:mr-4 md:w-[150px]">
             </div>
-            <button className="flex text-white items-center justify-center btn-hero z-[100] w-[9.5rem] h-[4.5rem]  shadow-sm font-police text-xl">
+            <button className="flex text-white items-center justify-center btn-hero z-[100] w-[9.5rem] h-[4.5rem]  shadow-sm font-police text-xl" onClick={adhEvent}>
                 Adhésion <FontAwesomeIcon size={34} icon={faCheckSquare} color="white" className="ml-2" />
                 
             </button>
           </div>
+          
         </div>
+        
+      </div>
+      <div className="main-wrapper flex flex-col md:flex-row md:px-[200px] relative">
+          {event.subscribers.map(photo => {
+              if (photo !== "") {
+                  return(
+                      <Avatar 
+                          variant="circular"
+                          alt="user 1"
+                          className="border-2 border-white hover:z-10 focus:z-10 w-[40px] h-[40px]"
+                          src={`${photoBaseURL}${photo}`}
+                      />
+                  )
+              }
+
+              return(
+                  <Avatar 
+                      variant="circular"
+                      alt="user 1"
+                      className="border-2 border-white hover:z-10 focus:z-10 w-[40px] h-[40px]"
+                      src={UserNone}
+                  />
+              )
+          })}
+                            
       </div>
     </main>
   );

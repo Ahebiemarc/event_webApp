@@ -34,12 +34,7 @@ function Events () {
           } else {
               eventData = await fetchAllEventSearch(searchTerm);
           }
-          
           setEvents(eventData);
-
-          if (events.length === 0)  {
-            return;
-          }
           const totalPages = calculateTotalPages(eventData, limitPerPage);
           setTotalPages(totalPages);
           setLoading(false);
